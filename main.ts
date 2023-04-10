@@ -64,12 +64,13 @@ export default class TodoPlugin extends Plugin {
         .filter((line) => (line.includes('- [ ]') || line.includes('- [x]')) && line.includes('#todo'))
         .map((line) => {
           // Replace Obsidian Tasks notations to todo.txt due date
-          line = line.replaceAll('/📅\s?/', 'due:');
+          line = line.replace('📅 ', 'due:');
+          line = line.replace('📅', 'due:');
 
           // Replace Obsidian Tasks recurrence notation to todo.txt recurrence
-          line = line.replaceAll('🔁 every day', 'rec:1d')
-            .replaceAll('🔁 every week', 'rec:1w')
-            .replaceAll('🔁 every month', 'rec:1m');
+          line = line.replace('🔁 every day', 'rec:1d');
+          line = line.replace('🔁 every week', 'rec:1w');
+          line = line.replace('🔁 every month', 'rec:1m');
 
           // Replace Obsidian Tasks notations to todo.txt priority notation
           const priorityRegex = /[\u{23EB}\u{1F53A}\u{1F53D}]/gu; // use 'g' flag to match all occurrences
