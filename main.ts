@@ -93,9 +93,8 @@ export default class TodoPlugin extends Plugin {
             line = `${priority} ${line}`;
           }
 
-
-          // Replace ticked off items with x
-          line = line.replace('- [x] ', 'x ');
+          // Replace ticked off items with x and append to beginning of line
+          line = line.includes('- [x] ') ? `x ${line.replace('- [x] ', '')}` : line;
 
           // Remove the checkbox and any tags from the line
           line = line.replace('- [ ]', '').replace('#todo', '');
