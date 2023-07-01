@@ -61,7 +61,7 @@ export default class TodoPlugin extends Plugin {
     const todoItems = filteredTodoNotes.map(async (note) => {
       const items = (await this.app.vault.read(note))
         ?.split('\n')
-        .filter((line) => (line.includes('- [ ]') || line.includes('- [x]')) && line.includes('#todo'))
+        .filter((line) => (line.includes('- [ ]') || line.includes('- [x]') || line.includes('- [/]')) && line.includes('#todo'))
         .map((line) => {
           // Replace Obsidian Tasks notations to todo.txt due date
           line = line.replace('📅 ', 'due:');
@@ -95,9 +95,10 @@ export default class TodoPlugin extends Plugin {
 
           // Replace ticked off items with x and append to beginning of line
           line = line.includes('- [x] ') ? `x ${line.replace('- [x] ', '')}` : line;
+          // line = line.includes('- [a] ') ? `a ${line.replace('- [a] ', '')}` : line;
 
           // Remove the checkbox and any tags from the line
-          line = line.replace('- [ ]', '').replace('#todo', '');
+          line = line.replace('- [ ]', '').replace('- [/]', '').replace('#todo', '');
 
           return line.trim();
         }) || [];
@@ -114,7 +115,7 @@ export default class TodoPlugin extends Plugin {
       allItems.flat().join('\n') + '\n'
     );
 
-    console.log('Updated todo.txt file');
+    // console.log('Updated todo.txt file');
   }
 
   getMarkdownFiles() {

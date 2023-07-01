@@ -1,10 +1,10 @@
 {
     "id": "obisidian-tasks-todo-txt",
     "name": "Obsidian Tasks to todo.txt",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "minAppVersion": "0.15.0",
     "description": "This plugin will save your tasks in a todo.txt file.",
-    "author": "Obsidian",
+    "author": "Nicu Cakcea",
     "authorUrl": "https://nicu.md/",
     "isDesktopOnly": false
 }
