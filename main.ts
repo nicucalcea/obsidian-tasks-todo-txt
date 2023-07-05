@@ -69,8 +69,12 @@ export default class TodoPlugin extends Plugin {
 
           // Replace Obsidian Tasks recurrence notation to todo.txt recurrence
           line = line.replace('🔁 every day', 'rec:1d');
+          line = line.replace('🔁 every two days', 'rec:2d');
+          line = line.replace(/🔁 every (\d+) day(s)?/gi, 'rec:$1d'); // e.g. every n days
           line = line.replace('🔁 every week', 'rec:1w');
+          line = line.replace(/🔁 every (\d+) week(s)?/gi, 'rec:$1w'); // e.g. every n weeks
           line = line.replace('🔁 every month', 'rec:1m');
+          line = line.replace(/🔁 every (\d+) month(s)?/gi, 'rec:$1m'); // e.g. every n months
 
           // Replace Obsidian Tasks notations to todo.txt priority notation
           const priorityRegex = /[\u{1F53A}\u{23EB}\u{1F53C}\u{1F53D}]/gu; // use 'g' flag to match all occurrences
