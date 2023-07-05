@@ -73,17 +73,19 @@ export default class TodoPlugin extends Plugin {
           line = line.replace('🔁 every month', 'rec:1m');
 
           // Replace Obsidian Tasks notations to todo.txt priority notation
-          const priorityRegex = /[\u{23EB}\u{1F53A}\u{1F53D}]/gu; // use 'g' flag to match all occurrences
+          const priorityRegex = /[\u{1F53A}\u{23EB}\u{1F53A}\u{1F53D}]/gu; // use 'g' flag to match all occurrences
           const matches = [...line.matchAll(priorityRegex)];
           let priority = '';
           matches.forEach((match) => {
             const priorityChar = match[0];
-            if (priorityChar === '\u{23EB}') {
+            if (priorityChar === '\u{1F53A}') {
               priority = '(A)';
-            } else if (priorityChar === '\u{1F53A}') {
+            } else if (priorityChar === '\u{23EB}') {
               priority = '(B)';
-            } else if (priorityChar === '\u{1F53D}') {
+            } else if (priorityChar === '\u{1F53A}') {
               priority = '(C)';
+            } else if (priorityChar === '\u{1F53D}') {
+              priority = '(D)';
             }
             line = line.replace(priorityChar, '');
           });
