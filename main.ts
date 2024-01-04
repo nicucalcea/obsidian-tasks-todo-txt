@@ -6,6 +6,11 @@ export default class TodoPlugin extends Plugin {
 
     await this.updateTodoFile();
 
+    // Function to check if a line contains a todo or a calendar emoji
+    function containsTodo(line: string): boolean {
+      return line.includes('#todo') || line.includes('📅');
+    }
+
     // Register an event listener for when a file is saved
     this.registerEvent(
       this.app.vault.on('modify', async (file) => {
@@ -15,10 +20,14 @@ export default class TodoPlugin extends Plugin {
           return;
         }
 
-        // Check if modified file has #todo tag
-        if ((await this.app.vault.read(file)).includes('#todo')) {
+        // Read the file
+        const fileContent = await this.app.vault.read(file);
+
+        // Check if the file content has #todo tag or 📅 symbol
+        if (containsTodo(fileContent)) {
           await this.updateTodoFile();
         }
+
       })
     );
 
@@ -26,7 +35,7 @@ export default class TodoPlugin extends Plugin {
     this.registerEvent(
       this.app.vault.on('delete', async (file) => {
         // Check if deleted file has #todo tag
-        if (file.path.includes('#todo')) {
+        if (containsTodo(file.path)) {
           await this.updateTodoFile();
         }
       })
@@ -36,7 +45,7 @@ export default class TodoPlugin extends Plugin {
     this.registerEvent(
       this.app.vault.on('create', async (file) => {
         // Check if created file has #todo tag
-        if ((await this.app.vault.read(file)).includes('#todo')) {
+        if (containsTodo(await this.app.vault.read(file))) {
           await this.updateTodoFile();
         }
       })
@@ -52,7 +61,7 @@ export default class TodoPlugin extends Plugin {
     // Filter out notes that do not have the #todo tag
     const todoNotes = markdownFiles.filter(async (note) => {
       const content = await this.app.vault.read(note);
-      return content.includes('#todo');
+      return containsTodo(content);
     });
 
     const filteredTodoNotes = todoNotes.filter((note) => note !== undefined);
@@ -61,7 +70,7 @@ export default class TodoPlugin extends Plugin {
     const todoItems = filteredTodoNotes.map(async (note) => {
       const items = (await this.app.vault.read(note))
         ?.split('\n')
-        .filter((line) => (line.includes('- [ ]') || line.includes('- [x]') || line.includes('- [/]')) && line.includes('#todo'))
+        .filter((line) => (line.includes('- [ ]') || line.includes('- [x]') || line.includes('- [/]')) && (line.includes('#todo') || line.includes('📅')))
         .map((line) => {
           // Replace Obsidian Tasks notations to todo.txt due date
           line = line.replace('📅 ', 'due:');
